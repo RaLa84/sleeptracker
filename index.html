@@ -8,5 +8,14 @@
 </head>
 <body>
     <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdGItFtkTkKKVP5JdDMcA7kgw2BjXEZpepT-ZbBdNOfEYsgyg/viewform?embedded=true" width="400" height="1200" frameborder="0" marginheight="0" marginwidth="0">Wird geladen…</iframe>
+    
+<script>
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js')
+        .then(() => console.log("Service Worker registriert!"))
+        .catch(error => console.error("Service Worker Fehler:", error));
+    }
+</script>
+        
 </body>
 </html>
