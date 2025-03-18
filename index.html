@@ -5,17 +5,88 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="manifest" href="manifest.json">
     <title>Sleeptracker</title>
+    <style>
+        #stopwatch-container {
+            width: 400px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        #time {
+            font-size: 2em;
+        }
+        button {
+            margin: 5px;
+            padding: 10px 20px;
+            font-size: 1em;
+            background-color: #673AB7;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #5E35B1;
+        }
+        h2 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
-    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdGItFtkTkKKVP5JdDMcA7kgw2BjXEZpepT-ZbBdNOfEYsgyg/viewform?embedded=true" width="400" height="1200" frameborder="0" marginheight="0" marginwidth="0">Wird geladen…</iframe>
+    <div id="stopwatch-container">
+        <h2>Stoppuhr</h2>
+        <div id="time">00:00:00</div>
+        <button onclick="startTimer()">Start</button>
+        <button onclick="stopTimer()">Stop</button>
+        <button onclick="resetTimer()">Reset</button>
+    </div>
+    
+    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdGItFtkTkKKVP5JdDMcA7kgw2BjXEZpepT-ZbBdNOfEYsgyg/viewform?embedded=true" 
+        width="400" height="1200" frameborder="0" marginheight="0" marginwidth="0">Wird geladen…</iframe>
     
 <script>
+    let timer;
+    let startTime;
+    let elapsedTime = 0;
+    let running = false;
+    
+    function updateTime() {
+        const now = Date.now() - startTime + elapsedTime;
+        const hours = String(Math.floor(now / 3600000)).padStart(2, '0');
+        const minutes = String(Math.floor((now % 3600000) / 60000)).padStart(2, '0');
+        const seconds = String(Math.floor((now % 60000) / 1000)).padStart(2, '0');
+        document.getElementById("time").textContent = `${hours}:${minutes}:${seconds}`;
+    }
+    
+    function startTimer() {
+        if (!running) {
+            startTime = Date.now();
+            timer = setInterval(updateTime, 1000);
+            running = true;
+        }
+    }
+    
+    function stopTimer() {
+        if (running) {
+            clearInterval(timer);
+            elapsedTime += Date.now() - startTime;
+            running = false;
+        }
+    }
+    
+    function resetTimer() {
+        clearInterval(timer);
+        elapsedTime = 0;
+        document.getElementById("time").textContent = "00:00:00";
+        running = false;
+    }
+    
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('sw.js')
         .then(() => console.log("Service Worker registriert!"))
         .catch(error => console.error("Service Worker Fehler:", error));
     }
 </script>
-        
 </body>
 </html>
